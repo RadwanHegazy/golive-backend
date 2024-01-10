@@ -1,6 +1,6 @@
 from django.urls import path
-from . import consumers
+from .consumers import RoomConsumer
 
 ws_urlpatterns = [
-    path('room/',consumers.RoomConsumer.as_asgi()),
+    path('ws/room/<str:room_id>/',RoomConsumer.as_asgi()),
 ]

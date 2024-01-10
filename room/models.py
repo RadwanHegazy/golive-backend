@@ -7,18 +7,11 @@ from django.db.models.signals import post_save, post_delete
 
 
 
-class Ip (models.Model) : 
-    ip = models.CharField(max_length=20,db_index=True)
-
-    def __str__(self) : 
-        return self.ip
-
 class Room (models.Model) : 
     id  = models.UUIDField(default=uuid4,editable=False,primary_key=True,db_index=True)
     created_by = models.ForeignKey(User,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100)
-    visitors = models.ManyToManyField(Ip,related_name='visitors_ips',blank=True)
 
     def __str__(self) : 
         return self.title
