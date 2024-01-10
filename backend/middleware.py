@@ -25,6 +25,10 @@ class TokenAuthMiddleware:
         close_old_connections()
         
         token = dict(scope)['query_string'].decode('utf-8').split('=')[-1]
+
+        if token is None or token == '':
+            return await self.inner(dict(scope, user=AnonymousUser()), receive, send, *args, **kwargs)
+
         try:
             UntypedToken(token)
         except (InvalidToken, TokenError) as e:
