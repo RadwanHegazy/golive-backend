@@ -1,6 +1,6 @@
 from rest_framework import decorators, status
 from rest_framework.response import Response
-from ...models import Room
+from ...models import Room, Message, Ip
 from ..serializers import RoomSerializer
 from django.core.cache import cache
 
@@ -33,8 +33,14 @@ def GetLive (request, live_id) :
                 "message" : 'not found'
             },status=status.HTTP_404_NOT_FOUND)
         
-        serializer = RoomSerializer(room)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+        msgs = Message.objects.order_by('-id').values("text")
+        data = {
+            "room_id" : live_id,
+            "messages" : msgs,
+            "count_messages" : msgs.count(),
+            "count_visitors" : room.visitors.all().count(),
+        }
+        return Response(data,status=status.HTTP_200_OK)
 
     except Exception as error :
         return Response({
