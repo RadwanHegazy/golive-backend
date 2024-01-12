@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from ..models import Room, Message
 from users.models import User
+from django.contrib.humanize.templatetags import humanize
+import datetime
 
 class CreateBySerializer  (serializers.ModelSerializer) : 
     class Meta :
@@ -13,6 +15,10 @@ class RoomSerializer (serializers.ModelSerializer) :
         model = Room
         fields = ["id","created_at",'title','created_by']
 
+    def to_representation(self, instance):
+        data =  super().to_representation(instance)
+        data['created_at'] = humanize.naturaltime(instance.created_at)
+        return data
 
 class MessageSerializer (serializers.ModelSerializer) : 
     
