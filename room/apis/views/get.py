@@ -33,7 +33,7 @@ def GetLive (request, live_id) :
                 "message" : 'not found'
             },status=status.HTTP_404_NOT_FOUND)
         
-        msgs = Message.objects.order_by('-id').values("text")
+        msgs = Message.objects.filter(room=room).order_by('-id').values("text")
         data = {
             "room_id" : live_id,
             "title" : room.title,
