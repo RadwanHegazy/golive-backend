@@ -36,6 +36,7 @@ def GetLive (request, live_id) :
         msgs = Message.objects.order_by('-id').values("text")
         data = {
             "room_id" : live_id,
+            "title" : room.title,
             "messages" : msgs,
             "count_messages" : msgs.count(),
         }
