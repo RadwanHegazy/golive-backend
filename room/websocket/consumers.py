@@ -11,6 +11,7 @@ class RoomConsumer (WebsocketConsumer) :
 
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         
+        self.user = self.scope['user']
         try : 
             self.room = Room.objects.get(id=self.room_id)
         except Room.DoesNotExist : 
@@ -42,10 +43,17 @@ class RoomConsumer (WebsocketConsumer) :
             self.channel_name
         )
 
+        if self.user == self.room.created_by : 
+            self.room.delete()
+
+        
+
     def receive(self, text_data):
         json_data = json.loads(text_data)
-        msg_text = json_data['message']
-        Message.objects.create(room=self.room,text=msg_text).save()
+
+        if 'message' in json_data : 
+            msg_text = json_data['message']
+            Message.objects.create(room=self.room,text=msg_text).save()
 
         async_to_sync(self.channel_layer.group_send)(
             self.group_name,
