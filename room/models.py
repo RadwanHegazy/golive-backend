@@ -33,6 +33,5 @@ def Update_Room_Create (created, instance, **kwargs) :
 
 @receiver(post_delete,sender=Room)
 def Update_room_Delete (instance, **kwargs) :
-    rooms = cache.get('rooms')
-    rooms = rooms.exclude(id=instance.id)
+    rooms = Room.objects.exclude(id=instance.id)
     cache.set('rooms', rooms)
